@@ -1,29 +1,77 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import './Menu.css'; // Import the CSS file
+import axios from 'axios';
+import styled from 'styled-components';
 
-import {
-    Link
-  } from "react-router-dom";
+const CustomNavBar = styled.nav`
+  color: white;
+`;
+
+
 
 function Menu() {
+  const [userId, setUserId] = useState('');
+  const [userFirstName, setUserFirstName] = useState('');
+  const value = localStorage.getItem('userId');
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    setUserId(value || '');
+
+    // Fetch user details when userId is available
+    if (value) {
+      // Replace the following API call with your actual API endpoint to fetch user details
+      fetchUserDetails(value);
+    }
+  }, [value]);
+
+  
+
+  const fetchUserDetails = async (userId) => {
+    try {
+      // Replace the following with your actual API endpoint to fetch user details
+      const response = await axios.get(`http://169.99.120.159:${3000}/api/users/${userId}`);
+      const userData = response.data;
+  
+      // Assuming the API response has a "firstname" property
+      setUserFirstName(userData.firstname);
+    } catch (error) {
+      console.error('Error fetching user details:', error.message);
+    }
+  };
+  
+  
+
+  const handleLogout = () => {
+    localStorage.clear();
+    setUserId('');
+    setUserFirstName('');
+    navigate('/');
+    location.reload();
+  };
+
   return (
-    <nav className="menu" 
-    aria-label="Main menu"
-    itemScope
-    itemType="https://schema.org/SiteNavigationElement">
-    <ul>
-    
-    <li><Link itemProp="url" to="#content" tabIndex="1">Skip to the Content</Link></li>
-
-      <li><Link itemProp="url" to="/" tabIndex="2">Homepage</Link></li>
-
-      <li><Link itemProp="url" to="/about" tabIndex="3">About</Link></li>
-
-      <li><Link itemProp="url" to="/login" tabIndex="4">Login</Link></li>
-      <li>
-        <Link to="https://google.com" tabIndex="5" target="blank">Google</Link>
-      </li>
-    </ul>
-  </nav>
+    <CustomNavBar className="menu" aria-label="Main menu" itemScope itemType="https://schema.org/SiteNavigationElement">
+      <ul>
+        {!userId ? (
+          <>
+            <li><Link itemProp="url" to="/login" tabIndex="5">Login</Link></li>
+            <li><Link itemProp="url" to="/register" tabIndex="6">Register</Link></li>
+          </>
+        ) : (
+          <>
+            <li><span>Welcome, {userFirstName}!</span></li>
+            <li><Link itemProp="url" to="/usermanual" tabIndex="2">User Manual</Link></li>
+            <li><Link itemProp="url" to="/homepage" tabIndex="3">HomePage</Link></li>
+            <li><Link itemProp="url" to="/enterusedbudget" tabIndex="2">Used Budget</Link></li>
+            <li><Link itemProp="url" to="/" tabIndex="11" onClick={handleLogout}>Logout</Link></li>
+            <li><span>Welcome, {userFirstName}!</span></li>
+          </>
+        )}
+      </ul>
+    </CustomNavBar>
   );
 }
 
