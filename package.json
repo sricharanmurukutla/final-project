@@ -2,7 +2,7 @@
   "name": "personal-budget-react",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3001",
+  "proxy": "http://159.203.85.6:3001",
   "dependencies": {
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^14.1.2",
@@ -26,7 +26,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start --host 0.0.0.0",
+    "start": "react-scripts start --host 138.197.6.126 --port 3000",
     "build": "react-scripts build",
     "test-react": "react-scripts test",
     "eject": "react-scripts eject",
